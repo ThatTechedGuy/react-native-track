@@ -19,6 +19,8 @@ const authReducer = (state, action) => {
         token: action.payload,
         errorMessage: "",
       };
+    case "SIGNOUT":
+      return { token: null, errorMessage: "" };
     case "CLEAR_ERROR":
       return { ...state, errorMessage: "" };
     default:
@@ -41,7 +43,7 @@ const signup = (dispatch) => async ({ email, password }) => {
       payload: response.data.token,
     });
     await AsyncStorage.setItem("token", response.data.token);
-    navigate("TrackList");
+    replaceScreen("MainFlow", { screen: "TrackList" });
   } catch (err) {
     console.log(err.response.data);
     dispatch({
@@ -65,7 +67,7 @@ const signin = (dispatch) => async ({ email, password }) => {
       payload: response.data.token,
     });
     await AsyncStorage.setItem("token", response.data.token);
-    navigate("TrackList");
+    replaceScreen("MainFlow", { screen: "TrackList" });
   } catch (err) {
     console.log(err.response.data);
     dispatch({
@@ -80,7 +82,7 @@ const localSignin = (dispatch) => async () => {
     const token = await AsyncStorage.getItem("token");
     if (token) {
       dispatch({ type: "LOCAL_SIGNIN", payload: token });
-      replaceScreen("MainFlow", {screen: 'TrackList'});
+      replaceScreen("MainFlow", { screen: "TrackList" });
     } else {
       replaceScreen("LoginFlow");
     }
@@ -92,8 +94,11 @@ const localSignin = (dispatch) => async () => {
 
 const clearErrorMessage = (dispatch) => () => dispatch({ type: "CLEAR_ERROR" });
 
-const signout = (dispatch) => () => {
-    
+const signout = (dispatch) => async () => {
+  await AsyncStorage.removeItem("token");
+
+  dispatch({ type: "SIGNOUT" });
+  replaceScreen("LoginFlow");
 };
 
 export const { Context, Provider } = createDataContext(
