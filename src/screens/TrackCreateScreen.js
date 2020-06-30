@@ -1,36 +1,28 @@
 import "./../../test/_mockLocation";
-
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Map from "../components/Map";
 import { Text } from "react-native-elements";
-import { requestPermissionsAsync, watchPositionAsync, Accuracy } from "expo-location";
 import Spacer from "../components/Spacer";
+import { Context as LocationContext } from "../context/LocationContext";
+import useLocation from "../hooks/useLocation";
+import TrackForm from "./../components/TrackForm";
 
-const TrackCreateScreen = () => {
-  const [err, setErr] = useState(null);
-  const startWatching = async () => {
-    try {
-      const { granted } = await requestPermissionsAsync();
-      await watchPositionAsync({
-        accuracy: Accuracy.BestForNavigation,
-        timeInterval: 1000,
-        distanceInterval: 10
-      }, (location) => {
-        console.log(location);
-      });
-      if (!granted) {
-        throw new Error("Location permission not granted");
-      }
-    } catch (e) {
-      setErr(e);
-    }
-  };
+const TrackCreateScreen = ({ navigation }) => {
+  const { addLocation } = useContext(LocationContext);
+  const [focus, setFocus] = useState(true);
+  const [err] = useLocation(focus, (location) => addLocation(location));
 
   useEffect(() => {
-    startWatching();
-  }, []);
+    const unsubscribe = navigation.addListener("focus", () => setFocus(true));
+    return unsubscribe;
+  }, [navigation]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("blur", () => setFocus(false));
+    return unsubscribe;
+  }, [navigation]);
 
   return (
     <SafeAreaView>
@@ -40,15 +32,18 @@ const TrackCreateScreen = () => {
       <Map />
       {err ? (
         <Spacer>
-          <Text style={{ color: "red", fontSize: 18, fontWeight: "bold" }}>
-            {err.message}
-          </Text>
+          <Text style={styles.text}>{err.message}</Text>
         </Spacer>
       ) : null}
+      <Spacer>
+        <TrackForm />
+      </Spacer>
     </SafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  text: { color: "red", fontSize: 18, fontWeight: "bold" },
+});
 
 export default TrackCreateScreen;

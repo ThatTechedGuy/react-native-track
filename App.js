@@ -13,6 +13,7 @@ import SignupScreen from "./src/screens/SignupScreen";
 import SigninScreen from "./src/screens/SigninScreen";
 
 import { Provider as AuthProvider } from "./src/context/AuthContext";
+import { Provider as LocationProvider } from "./src/context/LocationContext";
 
 import { navigationRef } from "./src/rootNavigation";
 import LoadingScreen from "./src/loadingScreen";
@@ -89,9 +90,11 @@ function App() {
 
 const Application = () => {
   return (
-    <AuthProvider>
-      <App />
-    </AuthProvider>
+    <LocationProvider>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </LocationProvider>
   );
 };
 
