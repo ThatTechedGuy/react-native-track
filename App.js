@@ -19,6 +19,7 @@ import { Provider as TrackProvider } from "./src/context/TrackContext";
 import { navigationRef } from "./src/rootNavigation";
 import LoadingScreen from "./src/loadingScreen";
 
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -37,9 +38,39 @@ function TrackListFlow() {
 
 function MainFlow() {
   return (
-    <Tab.Navigator initialRouteName="TrackListFlow">
-      <Tab.Screen name="TrackListFlow" component={TrackListFlow} options={{ headerShown: false }} />
-      <Tab.Screen name="TrackCreate" component={TrackCreateScreen} />
+    <Tab.Navigator
+      initialRouteName="TrackListFlow"
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+
+          if (route.name === "TrackListFlow") {
+            iconName = "road";
+          } else if (route.name === "TrackCreate") {
+            iconName = focused ? "plus-square" : "plus-square-o";
+          } else if (route.name === "Account") {
+            iconName = focused ? "user-circle" : "user-circle-o";
+          }
+
+          // You can return any component that you like here!
+          return <FontAwesome name={iconName} size={size} color={color} />;
+        },
+      })}
+      tabBarOptions={{
+        activeTintColor: "tomato",
+        inactiveTintColor: "gray",
+      }}
+    >
+      <Tab.Screen
+        name="TrackListFlow"
+        component={TrackListFlow}
+        options={{ headerShown: false, tabBarLabel: "Tracks" }}
+      />
+      <Tab.Screen
+        name="TrackCreate"
+        component={TrackCreateScreen}
+        options={{ tabBarLabel: "Create Track" }}
+      />
       <Tab.Screen name="Account" component={AccountScreen} />
     </Tab.Navigator>
   );
