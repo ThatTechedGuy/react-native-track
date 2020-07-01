@@ -1,5 +1,5 @@
 import "./../../test/_mockLocation";
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Map from "../components/Map";
@@ -10,9 +10,15 @@ import useLocation from "../hooks/useLocation";
 import TrackForm from "./../components/TrackForm";
 
 const TrackCreateScreen = ({ navigation }) => {
-  const { addLocation } = useContext(LocationContext);
+  const {
+    state: { recording },
+    addLocation,
+  } = useContext(LocationContext);
   const [focus, setFocus] = useState(true);
-  const [err] = useLocation(focus, (location) => addLocation(location));
+  /* The same callback should still trigger or not trigger at all if the recording state is the same. */
+  const callback = useCallback((location) => addLocation(location, recording), [recording]);
+
+  const [err] = useLocation(focus || recording, callback);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => setFocus(true));

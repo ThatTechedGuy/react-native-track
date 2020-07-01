@@ -14,6 +14,7 @@ import SigninScreen from "./src/screens/SigninScreen";
 
 import { Provider as AuthProvider } from "./src/context/AuthContext";
 import { Provider as LocationProvider } from "./src/context/LocationContext";
+import { Provider as TrackProvider } from "./src/context/TrackContext";
 
 import { navigationRef } from "./src/rootNavigation";
 import LoadingScreen from "./src/loadingScreen";
@@ -24,11 +25,7 @@ const Tab = createBottomTabNavigator();
 function TrackListFlow() {
   return (
     <Stack.Navigator initialRouteName="TrackList">
-      <Stack.Screen
-        name="TrackList"
-        component={TrackListScreen}
-        options={{ headerShown: false }}
-      />
+      <Stack.Screen name="TrackList" component={TrackListScreen} options={{ headerShown: false }} />
       <Stack.Screen
         name="TrackDetail"
         component={TrackDetailScreen}
@@ -41,11 +38,7 @@ function TrackListFlow() {
 function MainFlow() {
   return (
     <Tab.Navigator initialRouteName="TrackListFlow">
-      <Tab.Screen
-        name="TrackListFlow"
-        component={TrackListFlow}
-        options={{ headerShown: false }}
-      />
+      <Tab.Screen name="TrackListFlow" component={TrackListFlow} options={{ headerShown: false }} />
       <Tab.Screen name="TrackCreate" component={TrackCreateScreen} />
       <Tab.Screen name="Account" component={AccountScreen} />
     </Tab.Navigator>
@@ -55,16 +48,8 @@ function MainFlow() {
 function LoginFlow() {
   return (
     <Stack.Navigator>
-      <Stack.Screen
-        name="Signup"
-        component={SignupScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Signin"
-        component={SigninScreen}
-        options={{ headerShown: false }}
-      />
+      <Stack.Screen name="Signup" component={SignupScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Signin" component={SigninScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 }
@@ -73,16 +58,8 @@ function App() {
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator initialRouteName="Loading">
         <Stack.Screen name="Loading" component={LoadingScreen} />
-        <Stack.Screen
-          name="LoginFlow"
-          component={LoginFlow}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="MainFlow"
-          component={MainFlow}
-          options={{ headerShown: false }}
-        />
+        <Stack.Screen name="LoginFlow" component={LoginFlow} options={{ headerShown: false }} />
+        <Stack.Screen name="MainFlow" component={MainFlow} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

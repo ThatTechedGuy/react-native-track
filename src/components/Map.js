@@ -6,10 +6,10 @@ import { Context as LocationContext } from "../context/LocationContext";
 const Map = () => {
   const { state } = useContext(LocationContext);
 
-  const { currentLocation } = state;
+  const { currentLocation, locations } = state;
 
-  if (!currentLocation)
-    return <ActivityIndicator size="large" style={{ marginTop: 200 }} />;
+
+  if (!currentLocation) return <ActivityIndicator size="large" style={{ marginTop: 200 }} />;
   else
     return (
       <MapView
@@ -30,6 +30,12 @@ const Map = () => {
           radius={20}
           strokeColor="rgba(255,0,0,1.0)"
           fillColor="rgba(255,0,0,0.3)"
+        />
+        <Polyline
+          coordinates={locations.map((loc) => loc.coords)}
+          fillColor={"black"}
+          strokeColor={"black"}
+          strokeWidth={3.0}
         />
       </MapView>
     );
